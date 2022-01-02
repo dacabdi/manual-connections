@@ -6,8 +6,8 @@ After=network-online.target
 EnvironmentFile=/opt/piavpn-manual/settings.env
 WorkingDirectory=/opt/piacon/
 ExecStart=/bin/bash /opt/piacon/run_setup.sh
-ExecStopPost=wg-quick down pia
-Restart=yes
+ExecStopPost=/bin/bash -c 'if [[ $(ip a show pia up) ]]; then echo "Bringing down pia iface"; wg-quick down pia; fi;'
+Restart=always
 Type=simple
 User=root
 
