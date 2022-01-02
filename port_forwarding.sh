@@ -149,6 +149,16 @@ while true; do
     echo -e Forwarded port'\t'${GREEN}$port${NC}
     echo -e Refreshed on'\t'${GREEN}$(date)${NC}
     echo -e Expires on'\t'${RED}$(date --date="$expires_at")${NC}
+    echo -e Writing port number to /opt/piavpn-manual/piavpn-pfport
+    cat $port > /opt/piavpn-manual/piavpn-pfport
+
+    # Call port hook
+    HOOK_PORT_SCRIPT=/opt/piavpn-manual/onport_hook.sh
+    if [ -f "$HOOK_PORT_SCRIPT" ]; then
+        echo "Calling existing '$HOOK_PORT_SCRIPT' script to handle port."
+        . /opt/piavpn-manual/onport_hook.sh $HOOK_PORT_SCRIPT
+    fi
+
     echo -e "\n${GREEN}This script will need to remain active to use port forwarding, and will refresh every 15 minutes.${NC}\n"
 
     # sleep 15 minutes

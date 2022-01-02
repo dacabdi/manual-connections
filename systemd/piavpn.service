@@ -1,0 +1,15 @@
+[Unit]
+Description=Runs PIA over wiregaurd
+After=network-online.target
+
+[Service]
+EnvironmentFile=/opt/piavpn-manual/settings.env
+WorkingDirectory=/opt/piacon/
+ExecStart=/bin/bash /opt/piacon/run_setup.sh
+ExecStopPost=wg-quick down pia
+Restart=yes
+Type=simple
+User=root
+
+[Install]
+WantedBy=network-online.target

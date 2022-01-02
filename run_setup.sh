@@ -73,7 +73,7 @@ while :; do
       PIA_USER=""
     done
   export PIA_USER
- 
+
   while :; do
     # Check for in-line definition of $PIA_PASS
     if [[ ! $PIA_PASS || $PIA_PASS = "" ]]; then
@@ -82,7 +82,7 @@ while :; do
       read -rs PIA_PASS
       echo
     fi
-  
+
     # Confirm format of PIA_PASS input
     if [[ -z "$PIA_PASS" ]]; then
       echo -e "\n${RED}You must provide input.${NC}"
@@ -229,7 +229,7 @@ For example, you can try 0.2 for 200ms allowed latency.
         fi
         customLatency=0
         customLatency+=$latencyInput
-    
+
         if [[ -z "$latencyInput" ]]; then
           break
         elif [[ $latencyInput = 0 ]]; then
@@ -247,13 +247,13 @@ For example, you can try 0.2 for 200ms allowed latency.
       done
       export MAX_LATENCY
       echo -e "${GREEN}MAX_LATENCY=$MAX_LATENCY${NC}"
-      
+
       PREFERRED_REGION="none"
       export PREFERRED_REGION
       VPN_PROTOCOL="no"
       export VPN_PROTOCOL
       VPN_PROTOCOL=no ./get_region.sh
-      
+
       if [ -s /opt/piavpn-manual/latencyList ]; then
         # Output the ordered list of servers that meet the latency specification $MAX_LATENCY
         echo -e "Orderd list of servers with latency less than ${GREEN}$MAX_LATENCY${NC} seconds:"
@@ -272,9 +272,9 @@ For example, you can try 0.2 for 200ms allowed latency.
           echo " - "$location
         done < /opt/piavpn-manual/latencyList
         echo
-      
+
         # Receive input to specify the server to connect to manually
-        while :; do 
+        while :; do
           read -p "Input the number of the server you want to connect to ([1]-[$i]) : "  serverSelection
             if [[ -z "$serverSelection" ]]; then
               echo -e "\n${RED}You must provide input.${NC}\n"
@@ -291,7 +291,7 @@ For example, you can try 0.2 for 200ms allowed latency.
               break
             fi
         done
-  
+
         # Write the serverID for use when connecting, and display the serverName for user confirmation
         export PREFERRED_REGION
         echo
@@ -330,7 +330,7 @@ case $VPN_PROTOCOL in
     echo -n "Connection method ([W]ireguard/[o]penvpn): "
     read connection_method
     echo
-  
+
     VPN_PROTOCOL="wireguard"
     if echo ${connection_method:0:1} | grep -iq o; then
       echo -n "Connection method ([U]dp/[t]cp): "
