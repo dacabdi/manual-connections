@@ -41,10 +41,12 @@ if test -t 1; then
     GREEN='\033[0;32m'
     RED='\033[0;31m'
     NC='\033[0m' # No Color
+    CYAN='\033[0;36m'
   else
     GREEN=''
     RED=''
     NC='' # No Color
+    CYAN=''
   fi
 fi
 
@@ -128,6 +130,15 @@ if [ "$PIA_DNS" == true ]; then
   echo
   dnsSettingForVPN="DNS = $dnsServer"
 fi
+
+# Read extra configuration options for the interface if the file exists
+extraIFaceConfig=""
+EXTRA_CONFIG_FILE=/opt/piavpn-manual/extra_iface_config
+if [ -f "$EXTRA_CONFIG_FILE" ]; then
+    echo "The extra interface configuration file '$EXTRA_CONFIG_FILE' exists."
+    extraIFaceConfig=$(<$EXTRA_CONFIG_FILE)
+fi
+
 echo -n "Trying to write /etc/wireguard/pia.conf..."
 mkdir -p /etc/wireguard
 echo "
@@ -135,12 +146,16 @@ echo "
 Address = $(echo "$wireguard_json" | jq -r '.peer_ip')
 PrivateKey = $privKey
 $dnsSettingForVPN
+$extraIFaceConfig
 [Peer]
 PersistentKeepalive = 25
 PublicKey = $(echo "$wireguard_json" | jq -r '.server_key')
 AllowedIPs = 0.0.0.0/0
 Endpoint = ${WG_SERVER_IP}:$(echo "$wireguard_json" | jq -r '.server_port')
 " > /etc/wireguard/pia.conf || exit 1
+echo -e ${CYAN}Using configuration
+echo -e ${NC}
+cat /etc/wireguard/pia.conf
 echo -e ${GREEN}OK!${NC}
 
 # Start the WireGuard interface.

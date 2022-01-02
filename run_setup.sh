@@ -54,7 +54,7 @@ while :; do
         echo
         read -p "PIA username (p#######): " PIA_USER
       fi
-      
+
       # Confirm format of PIA_USER input
       unPrefix=$( echo ${PIA_USER:0:1} )
       unSuffix=$( echo ${PIA_USER:1} )
