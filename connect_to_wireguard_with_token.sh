@@ -185,7 +185,15 @@ if [ "$PIA_PF" != true ]; then
   echo
   echo The location used must be port forwarding enabled, or this will fail.
   echo Calling the ./get_region script with PIA_PF=true will provide a filtered list.
-  exit 1
+
+  while true; do
+      iface_info=`ip a show pia up`
+      if [[ -z "$iface_info" ]]; then
+          echo "The interface went down, failing unit!"
+          exit 1
+      fi
+      sleep 1
+  done
 fi
 
 echo -ne "This script got started with ${GREEN}PIA_PF=true${NC}.

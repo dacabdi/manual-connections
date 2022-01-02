@@ -150,7 +150,7 @@ while true; do
     echo -e Refreshed on'\t'${GREEN}$(date)${NC}
     echo -e Expires on'\t'${RED}$(date --date="$expires_at")${NC}
     echo -e Writing port number to /opt/piavpn-manual/piavpn-pfport
-    cat $port > /opt/piavpn-manual/piavpn-pfport
+    echo $port > /opt/piavpn-manual/piavpn-pfport
 
     # Call port hook
     HOOK_PORT_SCRIPT=/opt/piavpn-manual/onport_hook.sh
@@ -159,8 +159,14 @@ while true; do
         . /opt/piavpn-manual/onport_hook.sh $HOOK_PORT_SCRIPT
     fi
 
-    echo -e "\n${GREEN}This script will need to remain active to use port forwarding, and will refresh every 15 minutes.${NC}\n"
+    for i in $(seq 1 900); do
+        iface_info=`ip a show pia up`
+        if [[ -z "$iface_info" ]]; then
+            echo "The interface went down, failing unit!"
+            exit 1
+	fi
+	sleep 1
+    done
 
-    # sleep 15 minutes
-    sleep 900
+    echo -e "\n${GREEN}This script will need to remain active to use port forwarding, and will refresh every 15 minutes.${NC}\n"
 done
