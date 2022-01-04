@@ -156,7 +156,7 @@ while true; do
     HOOK_PORT_SCRIPT=/opt/piavpn-manual/onport_hook.sh
     if [ -f "$HOOK_PORT_SCRIPT" ]; then
         echo "Calling existing '$HOOK_PORT_SCRIPT' script to handle port."
-        . /opt/piavpn-manual/onport_hook.sh $HOOK_PORT_SCRIPT
+        sh +x /opt/piavpn-manual/onport_hook.sh $port
     fi
 
     for i in $(seq 1 900); do
