@@ -146,7 +146,25 @@ echo "
 Address = $(echo "$wireguard_json" | jq -r '.peer_ip')
 PrivateKey = $privKey
 $dnsSettingForVPN
+
+PreUp = resolvectl default-route eth0 false
+PreUp = resolvectl domain eth0 simoorg.net
+
+PostUp = resolvectl dns pia $dnsServer
+PostUp = resolvectl default-route pia true
+PostUp = resolvectl domain pia ~.
+
+PostUp = ip route add 192.168.0.0/16 via 192.168.124.1 dev eth0
+PostUp = ip route add 10.10.0.0/16 via 192.168.124.1 dev eth0
+
+PostDown = ip route del 192.168.0.0/16 via 192.168.124.1 dev eth0
+PostDown = ip route del 10.10.0.0/16 via 192.168.124.1 dev eth0
+
+PostDown = resolvectl default-route eth0 true
+PostDown = resolvectl domain eth0 simoorg.net
+
 $extraIFaceConfig
+
 [Peer]
 PersistentKeepalive = 25
 PublicKey = $(echo "$wireguard_json" | jq -r '.server_key')
